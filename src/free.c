@@ -1,23 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmartiro <dmartiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/17 05:27:36 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/06 12:06:19 by dmartiro         ###   ########.fr       */
+/*   Created: 2023/04/06 12:43:58 by dmartiro          #+#    #+#             */
+/*   Updated: 2023/04/06 12:44:45 by dmartiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "cube.h"
 
-# define BUFFER_SIZE 10
+void	free_char_pp(char ***pp)
+{
+	int	i;
 
-char	*get_next_line(int fd);
-char	*ft_strchr_(const char *buffer, int ch);
-char	*join(char *s1, char *s2);
-char	*after(char *buffer);
-char	*before(char *buffer);
-#endif
+	i = -1;
+	if (!(*pp) && !*(*pp))
+		return ;
+	while ((*pp)[++i])
+		free((*pp)[i]);
+	free((*pp));
+	(*pp) = NULL;
+}

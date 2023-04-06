@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cube.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmartiro <dmartiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/05 23:11:02 by tumolabs          #+#    #+#             */
-/*   Updated: 2023/04/06 02:02:21 by tumolabs         ###   ########.fr       */
+/*   Created: 2023/04/05 23:11:02 by dmartiro          #+#    #+#             */
+/*   Updated: 2023/04/06 12:44:50 by dmartiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
-#include <mlx.h>
+#include "../mlx/mlx.h"
 #include <stdlib.h>
 #include "../libft/libft.h"
 #include "get_next_line.h"
@@ -42,14 +42,28 @@ typedef struct s_table
     int ea;
     int f;
     int c;
+    int     cout[4];
     char    *north;
     char    *south;
     char    *east;
     char    *west;
 }   t_table;
 
+typedef struct s_vec3
+{
+    float   x;
+    float   y;
+    float   z;
+}   t_vec3;
+
+
 
 void    init(t_table **table);
 int     failure(int err);
 int     parser(t_table *table, char *filename);
 void    texture_line(char *line, t_table *table);
+int not_isset_textures(t_table *table);
+int rgb(char *line);
+void    floor_ceiling(char *line, t_table *table);
+void    replace_non_integers(char *line);
+void	free_char_pp(char ***pp);

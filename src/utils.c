@@ -1,26 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmartiro <dmartiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/05 23:49:41 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/06 12:51:16 by dmartiro         ###   ########.fr       */
+/*   Created: 2023/04/06 12:07:02 by dmartiro          #+#    #+#             */
+/*   Updated: 2023/04/06 12:45:11 by dmartiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
 
-int main(int ac, char **av)
+int rgb(char *line)
 {
-    t_table     *table;
+    int     rgb;
+    char    **split;
     
-    if (ac < 2 || ac > 2)
-        failure(-1);
-    init(&table);
-    if (parser(table, av[1]))
+    replace_non_integers(line);
+    split = ft_split(line, 3);
+    rgb = (ft_atoi(split[0]) << 16) | (ft_atoi(split[1]) << 8) | ft_atoi(split[2]);
+    free_char_pp(&split);
+    return (rgb);
+}
+
+void    replace_non_integers(char *line)
+{
+    int i;
+
+    i = 0;
+    while (line[i])
     {
-        printf("everything is okay\n");
+        if (!ft_isdigit(line[i]))
+            line[i] = 3;
+        i++;
     }
 }
