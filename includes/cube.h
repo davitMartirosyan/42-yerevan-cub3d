@@ -59,11 +59,11 @@ typedef struct s_vec3
 
 
 void    init(t_table **table);
-int     failure(int err);
-int     parser(t_table *table, char *filename);
-void    texture_line(char *line, t_table *table);
-int not_isset_textures(t_table *table);
-int rgb(char *line);
-void    floor_ceiling(char *line, t_table *table);
-void    replace_non_integers(char *line);
 void	free_char_pp(char ***pp);
+void    replace_all(char *line);
+void    replace_non_integers(char *line);
+int     parser(t_table *table, char *filename);
+int     rgb(char *line);
+int     failure(int err);
+int     textured(char **cmap, t_table *table);
+char    **copymap(char *filename);

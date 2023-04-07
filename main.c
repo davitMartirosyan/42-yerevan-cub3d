@@ -22,5 +22,6 @@ int main(int ac, char **av)
     if (parser(table, av[1]))
     {
         printf("everything is okay\n");
+        // run(table);
     }
 }
