@@ -6,7 +6,7 @@
 /*   By: dmartiro <dmartiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 23:11:02 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/06 12:44:50 by dmartiro         ###   ########.fr       */
+/*   Updated: 2023/04/07 15:12:19 by dmartiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,14 @@ typedef struct s_table
     int ea;
     int f;
     int c;
+    int floor;
+    int sky;
     int     cout[4];
     char    *north;
     char    *south;
     char    *east;
     char    *west;
+    char    *map;
 }   t_table;
 
 typedef struct s_vec3
@@ -61,9 +64,13 @@ typedef struct s_vec3
 void    init(t_table **table);
 void	free_char_pp(char ***pp);
 void    replace_all(char *line);
-void    replace_non_integers(char *line);
+void    replace_non_integers(char *line, int to);
+void    split_function(char **cmap, int i, int j, t_table *table);
 int     parser(t_table *table, char *filename);
 int     rgb(char *line);
 int     failure(int err);
 int     textured(char **cmap, t_table *table);
+int     floor_ceiling(char **cmap, t_table *table);
 char    **copymap(char *filename);
+char	*set_map(char *s1, int delimiter, char *s2);
+int     __set(char **cmap, t_table *table);

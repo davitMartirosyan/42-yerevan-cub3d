@@ -6,7 +6,7 @@
 /*   By: dmartiro <dmartiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:07:02 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/06 12:45:11 by dmartiro         ###   ########.fr       */
+/*   Updated: 2023/04/07 14:47:17 by dmartiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ int rgb(char *line)
     int     rgb;
     char    **split;
     
-    replace_non_integers(line);
+    replace_non_integers(line, 3);
     split = ft_split(line, 3);
     rgb = (ft_atoi(split[0]) << 16) | (ft_atoi(split[1]) << 8) | ft_atoi(split[2]);
     free_char_pp(&split);
     return (rgb);
 }
 
-void    replace_non_integers(char *line)
+void    replace_non_integers(char *line, int to)
 {
     int i;
 
@@ -32,7 +32,16 @@ void    replace_non_integers(char *line)
     while (line[i])
     {
         if (!ft_isdigit(line[i]))
-            line[i] = 3;
+            line[i] = to;
         i++;
     }
+}
+
+void    replace_all(char *line)
+{
+    int i;
+
+    i = -1;
+    while (line[++i])
+        line[i] = '9';
 }
