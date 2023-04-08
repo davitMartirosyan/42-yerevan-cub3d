@@ -3,114 +3,78 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmartiro <dmartiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 01:33:06 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/07 15:16:50 by dmartiro         ###   ########.fr       */
+/*   Updated: 2023/04/08 04:01:51 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
 
-
-int parser(t_table *table, char *filename)
+int	parser(t_table *table, char *filename)
 {
     char    **cmap;
 
     cmap = copymap(filename);
-    if (!textured(cmap, table))
-        return (0);
-    if (!floor_ceiling(cmap, table))
-        return (0);
-    if (!__set(cmap, table))
-        return (0);
-    free_char_pp(&cmap);
-    printf("%s\n", table->map);
-    return (1);
+	if (!cmap || !textured(cmap, table) || !floor_ceiling(cmap, table)
+		|| !__set(cmap, table) || !checked(table->map, table))
+	{
+    	free_char_pp(&cmap);
+		return (0);
+	}
+	int i = -1;
+	while (cmap[++i])
+		printf("%s\n", cmap[i]);
+	return (1);
 }
 
-int __set(char **cmap, t_table *table)
+int	checked(char *map, t_table *table)
 {
-    int i;
-    int j;
-
-    i = 0;
-    while (cmap[i])
-    {
-        if (!ft_strchr(cmap[i], '9'))
-        {
-            table->map = set_map(table->map, '\n', cmap[i]);
-            i++;
-            continue;
-        }
-        i++;
-    }
-    return (1);
-}
-
-char	*set_map(char *s1, int delimiter, char *s2)
-{
-	char	*arguments;
 	int		i;
-	int		c;
+	char	**split_map;
 
-	if (!s1 && !s2)
-		return (ft_strdup(""));
-	if (!s1)
-		return (ft_strdup(s2));
-	if (!s2)
-		return (ft_strdup(s1));
-	arguments = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 2));
-	if (!arguments)
-		return (NULL);
-	i = -1;
-	c = -1;
-	while (s1[++i])
-		arguments[i] = s1[i];
-	arguments[i++] = delimiter;
-	while (s2[++c])
-		arguments[i++] = s2[c];
-	arguments[i] = '\0';
-	free(s1);
-	s1 = 0;
-	return (arguments);
+	split_map = ft_split(map, '\n');
+	table->map_h = height(split_map);
+	table->map_w = width(split_map);
+	if (!head_bottom(split_map[0]) || !head_bottom(split_map[table->map_h - 1])
+		|| !middle(split_map) || !middle_points(split_map))
+	{
+		free_char_pp(&split_map);
+		return (0);
+	}
+	return (1);
 }
 
-int floor_ceiling(char **cmap, t_table *table)
+int	middle_points(char **map)
 {
-    int i;
-    int j;
-    char **split;
+	int	i;
+	int	j;
+	int	player;
 
-    i = 0;
-    while (cmap[i])
-    {
-        j = 0;
-        while (cmap[i][j])
-        {
-            if (ft_isspace(cmap[i][j]))
-            {
-                j++;
-                continue;
-            }
-            else if (ft_toupper(cmap[i][j]) == 'F')
-            {
-                table->floor = rgb(cmap[i]);
-                replace_all(cmap[i]);
-            }
-            else if (ft_toupper(cmap[i][j]) == 'C')
-            {
-                table->sky = rgb(cmap[i]);
-                replace_all(cmap[i]);
-            }
-            j++;
-        }
-        i++;
-    }
-    return (1);
+	i = -1;
+	player = 0;
+	while (map[++i])
+	{
+		j = -1;
+		printf("%s\n", map[i]);
+		while (map[i][++j])
+		{
+			if ((map[i][j] >= '0' && map[i][j] <= '9') || ft_isspace(map[i][j]))
+				continue;
+			else if (map[i][j] == 'N' || map[i][j] == 'S'
+				|| map[i][j] == 'W' || map[i][j] == 'E')
+				player++;
+			else
+				return (0);
+		}
+	}
+	if (player > 1)
+		return (0);
+	return (1);
 }
 
-int textured(char **cmap, t_table *table)
+int	textured(char **cmap, t_table *table)
 {
     int i;
     int j;
@@ -131,12 +95,13 @@ int textured(char **cmap, t_table *table)
         }
         i++;
     }
+
     if (!table->north || !table->south || !table->west || !table->east)
         return (0);
     return (1);
 }
 
-void    split_function(char **cmap, int i, int j, t_table *table)
+void	split_function(char **cmap, int i, int j, t_table *table)
 {
     if (cmap[i][j] == 'N' && cmap[i][j + 1] == 'O')
     {
@@ -160,15 +125,17 @@ void    split_function(char **cmap, int i, int j, t_table *table)
     }
 }
 
-char    **copymap(char *filename)
+char	**copymap(char *filename)
 {
-    int     fd;
-    char    *cpmap;
-    char    **split;
-    char    *line;
+    int		fd;
+    char	*cpmap;
+    char	**split;
+    char	*line;
 
     cpmap = NULL;
     fd = open(filename, O_RDONLY);
+	if (fd == -1)
+		return (0);
     line = get_next_line(fd);
     while (line != NULL)
     {

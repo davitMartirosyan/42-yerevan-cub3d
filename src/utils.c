@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmartiro <dmartiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 12:07:02 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/07 14:47:17 by dmartiro         ###   ########.fr       */
+/*   Updated: 2023/04/08 03:55:22 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,35 @@ void    replace_all(char *line)
 
     i = -1;
     while (line[++i])
-        line[i] = '9';
+        line[i] = '-';
+}
+
+int	head_bottom(char *string)
+{
+	int	i;
+
+	i = -1;
+	while (string[++i])
+	{
+		if (string[i] == '1' || ft_isspace(string[i]))
+			continue;
+		else
+			return (0);
+	}
+	return (1);
+}
+
+int	middle(char **map)
+{
+	int	i;
+
+	i = -1;
+	while (map[++i])
+	{
+		if (map[i][0] == '1' && map[i][ft_strlen(map[i]) - 1] == '1')
+			continue;
+		else
+			return (0);	
+	}
+	return (1);
 }
