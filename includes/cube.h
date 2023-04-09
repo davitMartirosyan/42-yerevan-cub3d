@@ -6,7 +6,7 @@
 /*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 23:11:02 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/08 03:26:39 by tumolabs         ###   ########.fr       */
+/*   Updated: 2023/04/09 04:46:33 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 /*
     0 empty space
     1 walls
-    N player who see's to north 8
-    S player who see's to south 2
-    E player who see's to east  6
-    W player who see's to west  4
+    N player who see's to north 30
+    S player who see's to south 35
+    E player who see's to east  21
+    W player who see's to west  39
 */
 
 #define WIDTH 600
@@ -63,9 +63,9 @@ void	free_char_pp(char ***pp);
 void    replace_all(char *line);
 void    replace_non_integers(char *line, int to);
 void    split_function(char **cmap, int i, int j, t_table *table);
+void	failure(int err);
 int     parser(t_table *table, char *filename);
 int     rgb(char *line);
-int     failure(int err);
 int     textured(char **cmap, t_table *table);
 int     floor_ceiling(char **cmap, t_table *table);
 int     __set(char **cmap, t_table *table);
@@ -75,5 +75,8 @@ int		width(char **map);
 int		head_bottom(char *string);
 int		middle(char **map);
 int		middle_points(char **map);
+int		redefine(t_table *table);
+int		convert(t_table *table);
+int		board_is_oppend(t_table *table);
 char    **copymap(char *filename);
 char	*set_map(char *s1, int delimiter, char *s2);

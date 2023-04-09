@@ -6,7 +6,7 @@
 /*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 01:33:06 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/08 04:01:51 by tumolabs         ###   ########.fr       */
+/*   Updated: 2023/04/09 04:41:08 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,96 @@ int	parser(t_table *table, char *filename)
     char    **cmap;
 
     cmap = copymap(filename);
-	if (!cmap || !textured(cmap, table) || !floor_ceiling(cmap, table)
-		|| !__set(cmap, table) || !checked(table->map, table))
+	if (!cmap
+		|| !textured(cmap, table)
+		|| !floor_ceiling(cmap, table)
+		|| !__set(cmap, table)
+		|| !checked(table->map, table)
+		|| !redefine(table)
+		|| !convert(table)
+		|| board_is_oppend(table))
 	{
+		// free_table(table);
     	free_char_pp(&cmap);
 		return (0);
 	}
-	int i = -1;
-	while (cmap[++i])
-		printf("%s\n", cmap[i]);
+    free_char_pp(&cmap);
+	return (1);
+}
+
+int	board_is_oppend(t_table *table)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < table->map_h)
+	{
+		x = 0;
+		while (x < table->map_w)
+		{
+			if (y > 0 && x > 0
+				&& table->mmap[y][x] == 0
+				&& table->mmap[y - 1][x] && table->mmap[y - 1][x] == -1)
+				return (1);
+			x++;
+		}
+		y++;
+	}
+	return (0);
+}
+
+int	convert(t_table *table)
+{
+	char	**split;
+	int		x;
+	int		y;
+
+	y = 0;
+	split = ft_split(table->map, '\n');
+	while (y < table->map_h)
+	{
+		x = 0;
+		while (x < table->map_w)
+		{
+			if (split[y][x] == 0)
+				break;
+			else if (ft_isspace(split[y][x]))
+			{
+				x++;
+				continue;
+			}
+			table->mmap[y][x] = split[y][x] - '0';
+			x++;
+		}
+		y++;
+	}
+	free_char_pp(&split);
+	return (1);
+}
+
+int	redefine(t_table *table)
+{
+	int	x;
+	int	y;
+	
+	y = 0;
+	table->mmap = malloc(sizeof(int *) * table->map_h);
+	if (!table->mmap)
+		return (0);
+	while (y <= table->map_h)
+	{
+		x = 0;
+		table->mmap[y] = malloc(sizeof(int) * table->map_w + 1);
+		while (x <= table->map_w)
+		{
+			table->mmap[y][x] = -1;
+			x++;
+		}
+		table->mmap[y][x] = 0;
+		y++;
+	}
+	table->mmap[y] = 0;
 	return (1);
 }
 
@@ -57,7 +138,6 @@ int	middle_points(char **map)
 	while (map[++i])
 	{
 		j = -1;
-		printf("%s\n", map[i]);
 		while (map[i][++j])
 		{
 			if ((map[i][j] >= '0' && map[i][j] <= '9') || ft_isspace(map[i][j]))
