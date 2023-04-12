@@ -6,7 +6,7 @@
 /*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 23:11:02 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/09 04:46:33 by tumolabs         ###   ########.fr       */
+/*   Updated: 2023/04/12 00:56:29 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,26 @@ typedef struct s_table
 	int		**mmap;
 }   t_table;
 
-typedef struct s_vec3
+typedef struct s_vec2
 {
-    float   x;
-    float   y;
-    float   z;
-}   t_vec3;
+    double	x;
+    double	y;
+}   t_vec2;
 
-void    init(t_table **table);
+typedef struct s_player
+{
+	t_vec2	pos;
+	t_vec2	dir;
+	t_vec2	plane;
+}	t_player;
+
+void    init(t_table **table, t_player **player);
 void	free_char_pp(char ***pp);
 void    replace_all(char *line);
 void    replace_non_integers(char *line, int to);
 void    split_function(char **cmap, int i, int j, t_table *table);
 void	failure(int err);
+void	find_player_position(t_table *table, t_player **player);
 int     parser(t_table *table, char *filename);
 int     rgb(char *line);
 int     textured(char **cmap, t_table *table);

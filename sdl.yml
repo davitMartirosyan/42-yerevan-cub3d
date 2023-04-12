@@ -1,0 +1,21 @@
+int x = 0;
+		int y = 0;
+		while (y < table->map_h)
+		{
+			x = 0;
+			while (x < table->map_w)
+			{
+				if (table->mmap[y][x] == 1)
+					printf("\033[0;30m{%d}", table->mmap[y][x]);
+				else if (table->mmap[y][x] == 0)
+					printf("\033[0;32m{%d}", table->mmap[y][x]);
+				else if (table->mmap[y][x] == -1)
+					printf("\033[0;30m{%d}", table->mmap[y][x]);
+				else
+					printf("\033[0;35m{%d}", table->mmap[y][x]);
+					
+				x++;
+			}
+			printf("\n");
+			y++;
+		}

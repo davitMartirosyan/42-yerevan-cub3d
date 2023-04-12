@@ -6,7 +6,7 @@
 /*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 01:33:06 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/09 04:41:08 by tumolabs         ###   ########.fr       */
+/*   Updated: 2023/04/12 00:32:29 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	parser(t_table *table, char *filename)
     	free_char_pp(&cmap);
 		return (0);
 	}
+	
     free_char_pp(&cmap);
 	return (1);
 }
