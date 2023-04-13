@@ -6,27 +6,27 @@
 /*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 01:33:06 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/12 00:32:29 by tumolabs         ###   ########.fr       */
+/*   Updated: 2023/04/13 02:04:36 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
 
-int	parser(t_table *table, char *filename)
+int	parser(t_game *game, char *filename)
 {
     char    **cmap;
 
     cmap = copymap(filename);
 	if (!cmap
-		|| !textured(cmap, table)
-		|| !floor_ceiling(cmap, table)
-		|| !__set(cmap, table)
-		|| !checked(table->map, table)
-		|| !redefine(table)
-		|| !convert(table)
-		|| board_is_oppend(table))
+		|| !textured(cmap, game)
+		|| !floor_ceiling(cmap, game)
+		|| !__set(cmap, game)
+		|| !checked(game->map, game)
+		|| !redefine(game)
+		|| !convert(game)
+		|| board_is_oppend(game))
 	{
-		// free_table(table);
+		// free_game(game);
     	free_char_pp(&cmap);
 		return (0);
 	}
@@ -35,20 +35,20 @@ int	parser(t_table *table, char *filename)
 	return (1);
 }
 
-int	board_is_oppend(t_table *table)
+int	board_is_oppend(t_game *game)
 {
 	int	x;
 	int	y;
 
 	y = 0;
-	while (y < table->map_h)
+	while (y < game->map_h)
 	{
 		x = 0;
-		while (x < table->map_w)
+		while (x < game->map_w)
 		{
 			if (y > 0 && x > 0
-				&& table->mmap[y][x] == 0
-				&& table->mmap[y - 1][x] && table->mmap[y - 1][x] == -1)
+				&& game->mmap[y][x] == 0
+				&& game->mmap[y - 1][x] && game->mmap[y - 1][x] == -1)
 				return (1);
 			x++;
 		}
@@ -57,18 +57,18 @@ int	board_is_oppend(t_table *table)
 	return (0);
 }
 
-int	convert(t_table *table)
+int	convert(t_game *game)
 {
 	char	**split;
 	int		x;
 	int		y;
 
 	y = 0;
-	split = ft_split(table->map, '\n');
-	while (y < table->map_h)
+	split = ft_split(game->map, '\n');
+	while (y < game->map_h)
 	{
 		x = 0;
-		while (x < table->map_w)
+		while (x < game->map_w)
 		{
 			if (split[y][x] == 0)
 				break;
@@ -77,7 +77,7 @@ int	convert(t_table *table)
 				x++;
 				continue;
 			}
-			table->mmap[y][x] = split[y][x] - '0';
+			game->mmap[y][x] = split[y][x] - '0';
 			x++;
 		}
 		y++;
@@ -86,40 +86,40 @@ int	convert(t_table *table)
 	return (1);
 }
 
-int	redefine(t_table *table)
+int	redefine(t_game *game)
 {
 	int	x;
 	int	y;
 	
 	y = 0;
-	table->mmap = malloc(sizeof(int *) * table->map_h);
-	if (!table->mmap)
+	game->mmap = malloc(sizeof(int *) * game->map_h);
+	if (!game->mmap)
 		return (0);
-	while (y <= table->map_h)
+	while (y <= game->map_h)
 	{
 		x = 0;
-		table->mmap[y] = malloc(sizeof(int) * table->map_w + 1);
-		while (x <= table->map_w)
+		game->mmap[y] = malloc(sizeof(int) * game->map_w + 1);
+		while (x <= game->map_w)
 		{
-			table->mmap[y][x] = -1;
+			game->mmap[y][x] = -1;
 			x++;
 		}
-		table->mmap[y][x] = 0;
+		game->mmap[y][x] = 0;
 		y++;
 	}
-	table->mmap[y] = 0;
+	game->mmap[y] = 0;
 	return (1);
 }
 
-int	checked(char *map, t_table *table)
+int	checked(char *map, t_game *game)
 {
 	int		i;
 	char	**split_map;
 
 	split_map = ft_split(map, '\n');
-	table->map_h = height(split_map);
-	table->map_w = width(split_map);
-	if (!head_bottom(split_map[0]) || !head_bottom(split_map[table->map_h - 1])
+	game->map_h = height(split_map);
+	game->map_w = width(split_map);
+	if (!head_bottom(split_map[0]) || !head_bottom(split_map[game->map_h - 1])
 		|| !middle(split_map) || !middle_points(split_map))
 	{
 		free_char_pp(&split_map);
@@ -155,7 +155,7 @@ int	middle_points(char **map)
 	return (1);
 }
 
-int	textured(char **cmap, t_table *table)
+int	textured(char **cmap, t_game *game)
 {
     int i;
     int j;
@@ -171,37 +171,37 @@ int	textured(char **cmap, t_table *table)
                 j++;
                 continue;
             }
-            split_function(cmap, i, j, table);
+            split_function(cmap, i, j, game);
             j++;
         }
         i++;
     }
 
-    if (!table->north || !table->south || !table->west || !table->east)
+    if (!game->north || !game->south || !game->west || !game->east)
         return (0);
     return (1);
 }
 
-void	split_function(char **cmap, int i, int j, t_table *table)
+void	split_function(char **cmap, int i, int j, t_game *game)
 {
     if (cmap[i][j] == 'N' && cmap[i][j + 1] == 'O')
     {
-        table->north = ft_strjoin(table->north, cmap[i] + j + 2);
+        game->north = ft_strjoin(game->north, cmap[i] + j + 2);
         replace_all(cmap[i]);
     }
     else if (cmap[i][j] == 'S' && cmap[i][j + 1] == 'O')
     {
-        table->south = ft_strjoin(table->south, cmap[i] + j + 2);
+        game->south = ft_strjoin(game->south, cmap[i] + j + 2);
         replace_all(cmap[i]);
     }
     else if (cmap[i][j] == 'W' && cmap[i][j + 1] == 'E')
     {
-        table->west = ft_strjoin(table->west, cmap[i] + j + 2);
+        game->west = ft_strjoin(game->west, cmap[i] + j + 2);
         replace_all(cmap[i]);
     }
     else if (cmap[i][j] == 'E' && cmap[i][j + 1] == 'A')
     {
-        table->east = ft_strjoin(table->east, cmap[i] + j + 2);
+        game->east = ft_strjoin(game->east, cmap[i] + j + 2);
         replace_all(cmap[i]);
     }
 }

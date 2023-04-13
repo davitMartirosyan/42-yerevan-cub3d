@@ -6,7 +6,7 @@
 /*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/08 01:30:50 by tumolabs          #+#    #+#             */
-/*   Updated: 2023/04/08 03:59:29 by tumolabs         ###   ########.fr       */
+/*   Updated: 2023/04/13 02:04:36 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*set_map(char *s1, int delimiter, char *s2)
 	return (arguments);
 }
 
-int	floor_ceiling(char **cmap, t_table *table)
+int	floor_ceiling(char **cmap, t_game *game)
 {
     int i;
     int j;
@@ -82,12 +82,12 @@ int	floor_ceiling(char **cmap, t_table *table)
             }
             else if (ft_toupper(cmap[i][j]) == 'F')
             {
-                table->floor = rgb(cmap[i]);
+                game->floor = rgb(cmap[i]);
                 replace_all(cmap[i]);
             }
             else if (ft_toupper(cmap[i][j]) == 'C')
             {
-                table->sky = rgb(cmap[i]);
+                game->sky = rgb(cmap[i]);
                 replace_all(cmap[i]);
             }
             j++;
@@ -97,7 +97,7 @@ int	floor_ceiling(char **cmap, t_table *table)
     return (1);
 }
 
-int	__set(char **cmap, t_table *table)
+int	__set(char **cmap, t_game *game)
 {
     int i;
     int j;
@@ -107,7 +107,7 @@ int	__set(char **cmap, t_table *table)
     {
         if (!ft_strchr(cmap[i], '-'))
         {
-            table->map = set_map(table->map, '\n', cmap[i]);
+            game->map = set_map(game->map, '\n', cmap[i]);
             i++;
             continue;
         }
