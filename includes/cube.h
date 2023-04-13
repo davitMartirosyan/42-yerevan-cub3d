@@ -6,7 +6,7 @@
 /*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 23:11:02 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/13 04:04:27 by tumolabs         ###   ########.fr       */
+/*   Updated: 2023/04/13 07:43:17 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ typedef struct s_vars
 {
 	void	*mlx;
 	void	*win;
-	t_player	*player;
 }	t_vars;
 
 typedef struct s_game
@@ -74,7 +73,7 @@ typedef struct s_game
 	t_player *player;
 }   t_game;
 
-void    init(t_game **game, t_player **player);
+void    init(t_game **game);
 void	free_char_pp(char ***pp);
 void    replace_all(char *line);
 int		keyhook(int	keycode, t_game *game);

@@ -6,7 +6,7 @@
 /*   By: tumolabs <tumolabs@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 23:49:41 by dmartiro          #+#    #+#             */
-/*   Updated: 2023/04/13 05:51:35 by tumolabs         ###   ########.fr       */
+/*   Updated: 2023/04/13 07:55:52 by tumolabs         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,9 @@ int main(int ac, char **av)
 	
     if (ac < 2 || ac > 2)
         failure(1);
-    init(&game, &player);
+    init(&game);
 	game->screen.mlx = mlx_init();
-	game->screen.win = mlx_new_window(game->screen.mlx, WIDTH, HEIGHT, "Cub3d");
-	game->player = player;
+	game->screen.win = mlx_new_window(game->screen.mlx, WIDTH, HEIGHT, "Cub3d");	
     if (parser(game, av[1]))
 		setup(game, player);
 	else
@@ -34,8 +33,8 @@ int main(int ac, char **av)
 
 void	setup(t_game *game, t_player *player)
 {
-	find_player_position(game, player);
-	find_player_direction(game, player);
+	find_player_position(game, game->player);
+	find_player_direction(game, game->player);
 	play(game);
 	write(1, "end of main\n", 12);
 }
@@ -117,14 +116,11 @@ void	find_player_direction(t_game *game, t_player *player)
 
 void	play(t_game *game)
 {
-	// double posX = 8, posY = 6;
-	// double dirX = 1, dirY = 0;
-	// double planeX = 0, planeY = 0.66;
-	
-	write(1, "havayi\n", 7);
-	for(int x = 0; x < WIDTH; x++)
+	int	x;
+
+	x = 0;
+	while (x < WIDTH)
 	{
-		// std::cout << "x - " << x << " ";	
 		double cameraX = 2 * x / (double)WIDTH - 1;
 		double rayDirX = game->player->dir.x + game->player->plane.x * cameraX;
 		double rayDirY = game->player->dir.y + game->player->plane.y * cameraX;
@@ -168,7 +164,6 @@ void	play(t_game *game)
 		{
 			if(sideDistX < sideDistY)
 			{
-				// std::cout << "sideDistX < sideDistY - " << (sideDistX < sideDistY) << "\n";
 				sideDistX += deltaDistX;
 				mapX += stepX;
 				side = 0;
@@ -179,36 +174,33 @@ void	play(t_game *game)
 				mapY += stepY;
 				side = 1;
 			}
-			printf("map[%d][%d] = ", mapY, mapX);
-			printf("%d\n", game->mmap[mapY][mapX]);
-			if(game->mmap[mapY][mapX] == 1) hit = 1;
+			if(game->mmap[mapY][mapX] == 1)
+				hit = 1;
 		}
-		write(1, "qtam\n", 5);
-		if(side == 0) perpWallDist = (sideDistX - deltaDistX);
-		else          perpWallDist = (sideDistY - deltaDistY);
-
+		if(side == 0)
+			perpWallDist = (sideDistX - deltaDistX);
+		else
+			perpWallDist = (sideDistY - deltaDistY);
 		int lineHeight = (int)(HEIGHT / perpWallDist);
-
 		int drawStart = -lineHeight / 2 + HEIGHT / 2;
-		if(drawStart < 0) drawStart = 0;
+		
+		if(drawStart < 0)
+			drawStart = 0;
 		int drawEnd = lineHeight / 2 + HEIGHT / 2;
-		if(drawEnd >= HEIGHT) drawEnd = HEIGHT - 1;
+		if(drawEnd >= HEIGHT)
+			drawEnd = HEIGHT - 1;
+		int	q, w, e;
 
-		printf("x - %d\n", x);
-		printf("drawStart - %d\n", drawStart);
-		printf("drawEnd - %d\n", drawEnd);
-		for (int i = 0; i < drawStart; i++)
-		{
-			
-		}
-			mlx_pixel_put(game->screen.mlx, game->screen.win, x, i, 0xd92032);
-		for(int i = drawStart; i < drawEnd; ++i)
-			mlx_pixel_put(game->screen.mlx, game->screen.win, x, i, 0x0074d7);
-		for(int i = drawEnd; i < HEIGHT; ++i)
-			mlx_pixel_put(game->screen.mlx, game->screen.win, x, i, 0xf9983e);
-		// std::cout << "x - " << x << " ";
-		// std::cout << "drawStart - " << drawStart << " ";
-		// std::cout << "drawEnd - " << drawEnd << "\n";
+		q = -1;
+		w = drawStart - 1;
+		e = drawEnd - 1;
+		while (++q < drawStart)
+			mlx_pixel_put(game->screen.mlx, game->screen.win, x, q, 0xd92032);
+		while (++w < drawEnd)
+			mlx_pixel_put(game->screen.mlx, game->screen.win, x, w, 0x0074d7);
+		while (++e < HEIGHT)
+			mlx_pixel_put(game->screen.mlx, game->screen.win, x, e, 0xf9983e);
+		x++;
     }
 }
 
